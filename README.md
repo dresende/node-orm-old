@@ -56,7 +56,7 @@ Node-ORM is a NodeJS module for multiple databases using Object-Relational Mappi
 
 ## Supported Types
 
-This values are still just supported for .sync() (table creations), not for other instance operations live .save() (yet).
+This values are still just supported for .sync() (table creations), not for other instance operations like .save() (yet).
 
 <table>
 	<tr>
@@ -105,4 +105,3 @@ This values are still just supported for .sync() (table creations), not for othe
 		<td>TEXT (saved as JSON)</td>
 	</tr>
 </table>
-1. string - Small text
