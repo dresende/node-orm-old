@@ -2,7 +2,7 @@ var ORM = function (db) {
 	this._db = db;
 };
 ORM.prototype.define = function (model, fields, colParams) {
-	var ORMObject = this,
+	var orm = this,
 	    associations = [];
 
 	var addOneAssociationMethods = function (model, association) {
@@ -50,7 +50,7 @@ ORM.prototype.define = function (model, fields, colParams) {
 			cb();
 		};
 	};
-	var ORMCollection = function (data) {
+	var Model = function (data) {
 		if (data) {
 			for (k in data) {
 				if (!data.hasOwnProperty(k)) continue;
@@ -87,10 +87,10 @@ ORM.prototype.define = function (model, fields, colParams) {
 			}
 		}
 	};
-	ORMCollection.prototype.saved = function () {
+	Model.prototype.saved = function () {
 		return false;
 	};
-	ORMCollection.prototype.save = function (callback) {
+	Model.prototype.save = function (callback) {
 		var data = {}, self = this;
 		
 		if (typeof this.id == "number" && this.id > 0) {
@@ -111,7 +111,7 @@ ORM.prototype.define = function (model, fields, colParams) {
 			}
 		}
 		
-		ORMObject._db.saveRecord(model, data, function (err, id) {
+		orm._db.saveRecord(model, data, function (err, id) {
 			if (err) {
 				if (typeof callback == "function") callback(err);
 				return;
@@ -123,7 +123,7 @@ ORM.prototype.define = function (model, fields, colParams) {
 			if (typeof callback == "function") callback(null, self);
 		});
 	};
-	ORMCollection.hasOne = function (association, model) {
+	Model.hasOne = function (association, model) {
 		associations.push({
 			"field"	: association,
 			"type"	: "one",
@@ -131,7 +131,7 @@ ORM.prototype.define = function (model, fields, colParams) {
 		});
 		addOneAssociationMethods(this, association);
 	};
-	ORMCollection.hasMany = function (association, model, field) {
+	Model.hasMany = function (association, model, field) {
 		associations.push({
 			"field"	: association,
 			"name"	: field,
@@ -139,25 +139,25 @@ ORM.prototype.define = function (model, fields, colParams) {
 			"entity": (!model ? this : model)	// this = circular reference
 		});
 	};
-	ORMCollection.sync = function () {
-		ORMObject._db.createCollection(model, fields, associations);
+	Model.sync = function () {
+		orm._db.createCollection(model, fields, associations);
 	};
-	ORMCollection.get = function (id, callback) {
-		ORMObject._db.selectRecords(model, { "conditions": { "id": id } }, function (err, data) {
+	Model.get = function (id, callback) {
+		orm._db.selectRecords(model, { "conditions": { "id": id } }, function (err, data) {
 			if (err) {
 				return callback();
 			}
 			if (data.length == 0) {
 				return callback();
 			}
-			callback(new ORMCollection(data[0]));
+			callback(new Model(data[0]));
 		});
 	};
-	ORMCollection.find = function () {
+	Model.find = function () {
 		console.log("find()");
 	};
 
-	return ORMCollection;
+	return Model;
 };
 
 exports.connect = function (uri, callback) {
