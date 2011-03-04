@@ -3,7 +3,7 @@ NodeJS ORM
 
 ## About
 
-Node-ORM is a NodeJS module for multiple databases using Object-relational mapping.
+Node-ORM is a NodeJS module for multiple databases using Object-Relational Mapping.
 
 ## Connecting to a Database (MySQL in the example)
 
@@ -13,6 +13,8 @@ Node-ORM is a NodeJS module for multiple databases using Object-relational mappi
             console.log("Could not connect to database!");
             return;
         }
+        
+        // you can now use db variable to define models
     });
 
 ## Defining a model
@@ -22,7 +24,7 @@ Node-ORM is a NodeJS module for multiple databases using Object-relational mappi
         "surname": { "type": "string", "default": "" },
         "age"    : { "type": "int" }
 	}, {
-        "classMethods" : {
+        "methods" : {
             "fullName" :function () {
                 return this.name + " " + this.surname;
             }
