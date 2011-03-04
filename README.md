@@ -90,6 +90,11 @@ This values are still just supported for .sync() (table creations), not for othe
 		<td>TINYINT(1) (true=1, false=0)</td>
 	</tr>
 	<tr>
+		<td>date</td>
+		<td>Date/time value (seconds precision)</td>
+		<td>DATETIME</td>
+	</tr>
+	<tr>
 		<td>data</td>
 		<td>Binary data</td>
 		<td>BLOB</td>
