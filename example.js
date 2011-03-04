@@ -3,8 +3,9 @@ var orm = require("./orm");
 orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 	var Person = db.define("person", {
 		"name"		: { "type": "string" },
-		"surname"	: { "type": "string", "default": "" },
-		"age"		: { "type": "int" }
+		"surname"	: { "type": "string", "def": "" },
+		"age"		: { "type": "int" },
+		"male"		: { "type": "bool", "def": true }
 	}, {
 		"methods"	: {
 			"fullName" :function () {
@@ -28,29 +29,25 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 	var Jane = new Person({
 		"name"		: "Jane",
 		"surname"	: "Doe",
-		"age"		: 18
+		"age"		: 18,
+		"male"		: false
 	});
 	
-	// show John record
-	console.log(John);
-	
 	// this will auto-save Jane (to get Jane's ID)
-	John.setSibling(Jane, function (success) {
-		if (success) {
-			John.save(function (success) {
-				if (success) {
-					// show John record again (should have sibling_id)
-					console.log(John);
-					John.unsetSibling(function (success) {
-						John.save(function (success) {
-							if (success) {
-								// show John record again (should have sibling_id = 0)
-								console.log(John);
-							}
-						});
-					});
-				}
-			});
+	John.setSibling(Jane, function (err) {
+		if (err) {
+			console.dir(err);
+			return;
 		}
+		John.save();
+
+		John.getSibling(function (JaneCopy) {
+			console.dir(JaneCopy);
+			console.log(Jane == JaneCopy);
+			Person.get(Jane.id, function (otherJaneCopy) {
+				console.dir(otherJaneCopy);
+				console.log(otherJaneCopy == JaneCopy);
+			});
+		});
 	});
 });
