@@ -89,7 +89,7 @@ DBClient.prototype.createCollection = function (collection, fields, assocs) {
 		*/
 	});
 };
-DBClient.prototype.selectRecords = function (collection, config, callback) {
+DBClient.prototype.selectRecords = function (collection, config) {
 	var _table = collection.toLowerCase(collection);
 	var _query = "SELECT * FROM `" + _table + "`";
 
@@ -113,12 +113,18 @@ DBClient.prototype.selectRecords = function (collection, config, callback) {
 		}
 		_query += " WHERE " + conditions.join(" AND ");
 	}
+
 	if (config.order) {
-		if (typeof config.order == "string") {
-			config.order = [ config.order ];
+		if (!config.order.match(/\s(asc|desc)$/i)) {
+			config.order += " asc";
 		}
-		_query += " ORDER BY `" + config.order.join("`, `") + "`";
+		_query += " ORDER BY " + config.order.replace(/\w+/g, function (word) {
+			if ([ "ASC", "DESC" ].indexOf(word.toUpperCase()) != -1)
+				return word.toUpperCase();
+			return "`" + word + "`";
+		});
 	}
+
 	if (config.limit) {
 		if (config.skip) {
 			_query += " LIMIT " + config.skip + ", " + config.limit;
@@ -131,11 +137,11 @@ DBClient.prototype.selectRecords = function (collection, config, callback) {
 
 	this._client.query(_query, function (err, info) {
 		if (err) {
-			callback(err);
+			config.callback(err);
 			return;
 		}
 		
-		callback(null, info);
+		config.callback(null, info);
 	});
 };
 DBClient.prototype.saveRecord = function (collection, data, callback) {
