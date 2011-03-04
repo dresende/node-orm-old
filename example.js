@@ -6,12 +6,14 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 		"surname"	: { "type": "string", "default": "" },
 		"age"		: { "type": "int" }
 	}, {
-		"classMethods"	: {
+		"methods"	: {
 			"fullName" :function () {
 				return this.name + " " + this.surname;
 			}
 		}
 	});
+	Person.hasOne("sibling", Person);
+	Person.hasMany("friends", Person, "friend");
 	Person.sync();
 
 	var John = new Person({
@@ -24,9 +26,23 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 		"surname"	: "Doe",
 		"age"		: 18
 	});
+	console.log(John);
 	
-	console.log("Hi, my name is " + John.fullName() + " and I'm " + John.age + " years old");
-	console.log("And my name is " + Jane.name + " and I'm " + Jane.age + " years old");
-	
-	Person.find();
+	// this will auto-save Jane
+	John.setSibling(Jane, function (success) {
+		if (success) {
+			John.save(function (success) {
+				if (success) {
+					console.log(John);
+					John.unsetSibling(function (success) {
+						John.save(function (success) {
+							if (success) {
+								console.log(John);
+							}
+						});
+					});
+				}
+			});
+		}
+	});
 });
