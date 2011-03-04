@@ -126,9 +126,32 @@ ORMClient.prototype._insertRecord = function (collection, data, callback) {
 		callback(true, info.insertId);
 	});
 };
-ORMClient.prototype._updateRecord = function (collection, data, id) {
+ORMClient.prototype._updateRecord = function (collection, data, id, callback) {
 	var _table = collection.toLowerCase();
-	var _query = "UPDATE `" + _table + "` SET %values WHERE `id`=" + id;
+	var _query = "UPDATE `" + _table + "` SET %values WHERE `id`=" + id, _values = [];
+	
+	for (k in data) {
+		if (!data.hasOwnProperty(k)) continue;
+
+		switch (typeof data[k]) {
+			case "number":
+				_values.push("`" + k + "`=" + data[k]);
+				break;
+			default:
+				_values.push("`" + k + "`='" + data[k].replace("'", "\\'") + "'");
+		}
+	}
+	
+	_query = _query.replace("%values", _values.join(", "));
+	
+	this._client.query(_query, function (err, info) {
+		if (err) {
+			callback(false);
+			return;
+		}
+		
+		callback(true);
+	});
 };
 
 exports.connect = function (options, callback) {
