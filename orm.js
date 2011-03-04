@@ -61,6 +61,10 @@ ORM.prototype.define = function (model, fields, colParams) {
 						case "boolean":
 							data[k] = (data[k] == 1);
 							break;
+						case "struct":
+							if (typeof data[k] == "string") {
+								data[k] = (data[k].length > 0 ? JSON.parse(data[k]) : {});
+							}
 					}
 				}
 
@@ -99,9 +103,27 @@ ORM.prototype.define = function (model, fields, colParams) {
 
 		for (k in fields) {
 			if (!fields.hasOwnProperty(k)) continue;
-
-			data[k] = this[k];
+			
+			switch (fields[k].type) {
+				case "bool":
+				case "boolean":
+					data[k] = (this[k] == 1);
+					break;
+				case "date":
+					data[k] = (this[k].toJSON ? this[k].toJSON() : null);
+					break;
+				case "struct":
+					if (this[k]) {
+						data[k] = (typeof this[k] == "object" ? JSON.stringify(this[k]) : this[k]);
+					} else {
+						data[k] = "";
+					}
+					break;
+				default:
+					data[k] = this[k];
+			}
 		}
+
 		for (var i = 0; i < associations.length; i++) {
 			switch (associations[i].type) {
 				case "one":
