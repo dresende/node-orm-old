@@ -1,49 +1,107 @@
 var ORM = function (db) {
 	this._db = db;
 };
-ORM.prototype.define = function (colName, colFields, colParams) {
+ORM.prototype.define = function (model, fields, colParams) {
 	var ORMObject = this,
-	    collection = colName,
-	    collectionFields = colFields || {},
-	    collectionAssociations = [];
+	    associations = [];
 
+	var addOneAssociationMethods = function (model, association) {
+		var camelCaseAssociation = association.substr(0, 1).toUpperCase() + association.substr(1);
+	
+		model.prototype["get" + camelCaseAssociation] = function (cb) {
+			cb({ "id": null, "description": "not done yet" });
+		};
+		model.prototype["unset" + camelCaseAssociation] = function (cb) {
+			this["set" + camelCaseAssociation](null, cb);
+		};
+		model.prototype["set" + camelCaseAssociation] = function (instance, cb) {
+			var self = this;
+			
+			if (instance === null) {
+				self[association + "_id"] = 0;
+				cb(true);
+				return;
+			}
+
+			if (!instance.saved()) {
+				instance.save(function (success) {
+					if (!success) {
+						return cb(false);
+					}
+					self[association + "_id"] = instance.id;
+					cb(true);
+				});
+				return;
+			}
+			self[association + "_id"] = instance.id;
+			cb(true);
+		};
+	};
 	var ORMCollection = function (data) {
 		if (data) {
 			for (k in data) {
 				if (data.hasOwnProperty(k)) this[k] = data[k];
 			}
 		}
-		if (colParams && colParams.classMethods) {
-			for (k in colParams.classMethods) {
-				this[k] = colParams.classMethods[k];
+		if (colParams && colParams.methods) {
+			for (k in colParams.methods) {
+				this[k] = colParams.methods[k];
 			}
 		}
 	};
-	ORMCollection.prototype.hasOne = function (association, collection) {
-		collectionAssociations.push({
+	ORMCollection.prototype.saved = function () {
+		return false;
+	};
+	ORMCollection.prototype.save = function (callback) {
+		var data = {}, self = this;
+		
+		if (typeof this.id == "number" && this.id > 0) {
+			data.id = this.id;
+		}
+
+		for (k in fields) {
+			if (!fields.hasOwnProperty(k)) continue;
+			
+			data[k] = this[k];
+		}
+		for (var i = 0; i < associations.length; i++) {
+			switch (associations[i].type) {
+				case "one":
+					if (this.hasOwnProperty(associations[i].field + "_id")) {
+						data[associations[i].field + "_id"] = this[associations[i].field + "_id"];
+					}
+			}
+		}
+		
+		ORMObject._db.saveRecord(model, data, function (success, id) {
+			if (!success) {
+				if (typeof callback == "function") callback(false);
+				return;
+			}
+			if (!self.id) {
+				self.id = id;
+			}
+			if (typeof callback == "function") callback(true, self);
+		});
+	};
+	ORMCollection.hasOne = function (association, model) {
+		associations.push({
 			"field"	: association,
 			"type"	: "one",
-			"entity": (!collection ? this : collection)	// this = circular reference
+			"entity": (!model ? this : model)	// this = circular reference
 		});
-		this._addOneAssociationMethods(association);
+		addOneAssociationMethods(this, association);
 	};
-	ORMCollection.prototype.hasMany = function (association, collection, field) {
-		collectionAssociations.push({
+	ORMCollection.hasMany = function (association, model, field) {
+		associations.push({
 			"field"	: association,
 			"name"	: field,
 			"type"	: "many",
-			"entity": (!collection ? this : collection)	// this = circular reference
+			"entity": (!model ? this : model)	// this = circular reference
 		});
 	};
-	ORMCollection.prototype._addOneAssociationMethods = function (collection, association) {
-		var method = "get" + association.substr(0, 1).toUpperCase() + association.substr(1);
-	
-		this.prototype[method] = function (cb) {
-			cb({ "id": null, "description": "not done yet" });
-		};
-	};
 	ORMCollection.sync = function () {
-		ORMObject._db.createCollection(collection, collectionFields, collectionAssociations);
+		ORMObject._db.createCollection(model, fields, associations);
 	};
 	ORMCollection.find = function () {
 		console.log("find()");
