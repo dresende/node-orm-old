@@ -34,6 +34,7 @@ DBClient.prototype.createCollection = function (collection, fields, assocs) {
 			case "float":	field += " FLOAT"; break;
 			case "bool":
 			case "boolean":	field += " TINYINT(1)"; break;
+			case "date":	field += " DATETIME"; break;
 			case "data":	field += " BLOB"; break;
 			default:
 				field += " VARCHAR(255)";
