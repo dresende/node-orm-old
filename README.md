@@ -34,3 +34,23 @@ Node-ORM is a NodeJS module for multiple databases using Object-Relational Mappi
 ## Creating the model on the database
 
     Person.sync();
+
+## Creating and using a record
+
+    var John = new Person({
+    	"name"		: "John",
+    	"surname"	: "Doe",
+    	"age"		: 20
+    });
+    console.log("Hello, my name is " + John.fullName() + " and I'm " + John.age + " years old");
+
+## Saving record to database
+
+    John.save(function (success) {
+    	if (success) {
+    		console.log("Saved! ID=" + John.id);
+    	} else {
+    		console.log("Something went wrong...");
+    	}
+    });
+
