@@ -9,7 +9,17 @@ ORM.prototype.define = function (model, fields, colParams) {
 		var camelCaseAssociation = association.substr(0, 1).toUpperCase() + association.substr(1);
 	
 		model.prototype["get" + camelCaseAssociation] = function (cb) {
-			cb({ "id": null, "description": "not done yet" });
+			var self = this;
+			
+			if (self[association + "_id"] > 0) {
+				if (self[association]) {
+					cb(self[association]);
+					return;
+				}
+				cb({ "id": null, "description": "need to fetch" });
+				return;
+			}
+			cb(null);
 		};
 		model.prototype["unset" + camelCaseAssociation] = function (cb) {
 			this["set" + camelCaseAssociation](null, cb);
@@ -19,30 +29,58 @@ ORM.prototype.define = function (model, fields, colParams) {
 			
 			if (instance === null) {
 				self[association + "_id"] = 0;
-				cb(true);
+				delete self[association];
+				cb();
 				return;
 			}
 
 			if (!instance.saved()) {
-				instance.save(function (success) {
-					if (!success) {
-						return cb(false);
+				instance.save(function (err, savedInstance) {
+					if (err) {
+						return cb(err);
 					}
-					self[association + "_id"] = instance.id;
-					cb(true);
+					self[association + "_id"] = savedInstance.id;
+					self[association] = savedInstance;
+					cb();
 				});
 				return;
 			}
 			self[association + "_id"] = instance.id;
-			cb(true);
+			self[association] = instance;
+			cb();
 		};
 	};
 	var ORMCollection = function (data) {
 		if (data) {
 			for (k in data) {
-				if (data.hasOwnProperty(k)) this[k] = data[k];
+				if (!data.hasOwnProperty(k)) continue;
+				
+				if (fields.hasOwnProperty(k)) {
+					switch (fields[k].type) {
+						case "bool":
+						case "boolean":
+							data[k] = (data[k] == 1);
+							break;
+					}
+				}
+
+				this[k] = data[k];
 			}
 		}
+		for (k in fields) {
+			if (!fields.hasOwnProperty(k)) continue;
+			if (!data.hasOwnProperty(k) && fields[k].def) this[k] = fields[k].def;
+		}
+		for (var i = 0; i < associations.length; i++) {
+			switch (associations[i].type) {
+				case "one":
+					if (!this.hasOwnProperty(associations[i].field + "_id")) {
+						this[associations[i].field + "_id"] = 0;
+					}
+					break;
+			}
+		}
+		
 		if (colParams && colParams.methods) {
 			for (k in colParams.methods) {
 				this[k] = colParams.methods[k];
@@ -61,7 +99,7 @@ ORM.prototype.define = function (model, fields, colParams) {
 
 		for (k in fields) {
 			if (!fields.hasOwnProperty(k)) continue;
-			
+
 			data[k] = this[k];
 		}
 		for (var i = 0; i < associations.length; i++) {
@@ -73,15 +111,16 @@ ORM.prototype.define = function (model, fields, colParams) {
 			}
 		}
 		
-		ORMObject._db.saveRecord(model, data, function (success, id) {
-			if (!success) {
-				if (typeof callback == "function") callback(false);
+		ORMObject._db.saveRecord(model, data, function (err, id) {
+			if (err) {
+				if (typeof callback == "function") callback(err);
 				return;
 			}
+
 			if (!self.id) {
 				self.id = id;
 			}
-			if (typeof callback == "function") callback(true, self);
+			if (typeof callback == "function") callback(null, self);
 		});
 	};
 	ORMCollection.hasOne = function (association, model) {
@@ -102,6 +141,17 @@ ORM.prototype.define = function (model, fields, colParams) {
 	};
 	ORMCollection.sync = function () {
 		ORMObject._db.createCollection(model, fields, associations);
+	};
+	ORMCollection.get = function (id, callback) {
+		ORMObject._db.selectRecords(model, { "conditions": { "id": id } }, function (err, data) {
+			if (err) {
+				return callback();
+			}
+			if (data.length == 0) {
+				return callback();
+			}
+			callback(new ORMCollection(data[0]));
+		});
 	};
 	ORMCollection.find = function () {
 		console.log("find()");
