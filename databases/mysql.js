@@ -1,8 +1,8 @@
 var Client = require("mysql").Client;
-var ORMClient = function (client) {
+var DBClient = function (client) {
 	this._client = client;
 };
-ORMClient.prototype.createCollection = function (collection, fields, assocs) {
+DBClient.prototype.createCollection = function (collection, fields, assocs) {
 	var _table = collection.toLowerCase();
 	var _query = "CREATE TABLE IF NOT EXISTS `%table` (%values) ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci", _fields = [], _indexes = [];
 	_query = _query.replace("%table", _table);
@@ -88,7 +88,7 @@ ORMClient.prototype.createCollection = function (collection, fields, assocs) {
 		*/
 	});
 };
-ORMClient.prototype.selectRecords = function (collection, config, callback) {
+DBClient.prototype.selectRecords = function (collection, config, callback) {
 	var _table = collection.toLowerCase(collection);
 	var _query = "SELECT * FROM `" + _table + "`";
 
@@ -137,7 +137,7 @@ ORMClient.prototype.selectRecords = function (collection, config, callback) {
 		callback(null, info);
 	});
 };
-ORMClient.prototype.saveRecord = function (collection, data, callback) {
+DBClient.prototype.saveRecord = function (collection, data, callback) {
 	if (parseInt(data.id) > 0) {
 		var id = data.id;
 		delete data.id;
@@ -147,7 +147,7 @@ ORMClient.prototype.saveRecord = function (collection, data, callback) {
 		this._insertRecord(collection, data, callback);
 	}
 };
-ORMClient.prototype._insertRecord = function (collection, data, callback) {
+DBClient.prototype._insertRecord = function (collection, data, callback) {
 	var _table = collection.toLowerCase();
 	var _query = "INSERT INTO `" + _table + "` (%fields) VALUES (%values)", _fields = [], _values = [];
 	
@@ -184,7 +184,7 @@ ORMClient.prototype._insertRecord = function (collection, data, callback) {
 		callback(null, info.insertId);
 	});
 };
-ORMClient.prototype._updateRecord = function (collection, data, id, callback) {
+DBClient.prototype._updateRecord = function (collection, data, id, callback) {
 	var _table = collection.toLowerCase();
 	var _query = "UPDATE `" + _table + "` SET %values WHERE `id`=" + id, _values = [];
 	
@@ -257,7 +257,7 @@ exports.connect = function (options, callback) {
 		if (err && err.number) {
 			callback(false, { "number": err.number, "message": err.message });
 		} else {
-			callback(true, new ORMClient(client));
+			callback(true, new DBClient(client));
 		}
 	});
 };
