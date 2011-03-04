@@ -49,7 +49,9 @@ ORMClient.prototype.createCollection = function (collection, fields, assocs) {
 				field_names.push(assocs[i].field + "_id");
 				break;
 			case "many":
-				this._sync(_table + "_" + assocs[i].field, { "_params": [ "unique-record", "no-id" ] }, [{
+				this.createCollection(_table + "_" + assocs[i].field, {
+					"_params": [ "unique-record", "no-id" ]
+				}, [{
 					"field"	: _table,
 					"type"	: "one",
 					"entity": this
@@ -83,6 +85,50 @@ ORMClient.prototype.createCollection = function (collection, fields, assocs) {
 		console.log("collection synced");
 		*/
 	});
+};
+ORMClient.prototype.saveRecord = function (collection, data, callback) {
+	if (parseInt(data.id) > 0) {
+		var id = data.id;
+		delete data.id;
+		
+		this._updateRecord(collection, data, id, callback);
+	} else {
+		this._insertRecord(collection, data, callback);
+	}
+};
+ORMClient.prototype._insertRecord = function (collection, data, callback) {
+	var _table = collection.toLowerCase();
+	var _query = "INSERT INTO `" + _table + "` (%fields) VALUES (%values)", _fields = [], _values = [];
+	
+	for (k in data) {
+		if (!data.hasOwnProperty(k)) continue;
+		
+		_fields.push("`" + k + "`");
+
+		switch (typeof data[k]) {
+			case "number":
+				_values.push(data[k]);
+				break;
+			default:
+				_values.push("'" + data[k].replace("'", "\\'") + "'");
+		}
+	}
+	
+	_query = _query.replace("%fields", _fields.join(", "));
+	_query = _query.replace("%values", _values.join(", "));
+	
+	this._client.query(_query, function (err, info) {
+		if (err) {
+			callback(false);
+			return;
+		}
+		
+		callback(true, info.insertId);
+	});
+};
+ORMClient.prototype._updateRecord = function (collection, data, id) {
+	var _table = collection.toLowerCase();
+	var _query = "UPDATE `" + _table + "` SET %values WHERE `id`=" + id;
 };
 
 exports.connect = function (options, callback) {
