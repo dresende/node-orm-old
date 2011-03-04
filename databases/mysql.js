@@ -27,6 +27,8 @@ ORMClient.prototype.createCollection = function (collection, fields, assocs) {
 				break;
 			case "struct":
 			case "text":	field += " TEXT"; break;
+			case "num":
+			case "number":
 			case "int":
 			case "integer":	field += " INT"; break;
 			case "float":	field += " FLOAT"; break;
@@ -86,6 +88,55 @@ ORMClient.prototype.createCollection = function (collection, fields, assocs) {
 		*/
 	});
 };
+ORMClient.prototype.selectRecords = function (collection, config, callback) {
+	var _table = collection.toLowerCase(collection);
+	var _query = "SELECT * FROM `" + _table + "`";
+
+	config = config || {};
+
+	if (config.conditions) {
+		var conditions = [];
+		for (k in config.conditions) {
+			if (!config.conditions.hasOwnProperty(k)) continue;
+			
+			switch (typeof config.conditions[k]) {
+				case "number":
+					conditions.push("`" + k + "`=" + config.conditions[k]);
+					break;
+				case "boolean":
+					conditions.push("`" + k + "`=" + (config.conditions[k] ? 1 : 0));
+					break;
+				default:
+					conditions.push("`" + k + "`='" + config.conditions[k].replace("'", "\\'") + "'");
+			}
+		}
+		_query += " WHERE " + conditions.join(" AND ");
+	}
+	if (config.order) {
+		if (typeof config.order == "string") {
+			config.order = [ config.order ];
+		}
+		_query += " ORDER BY `" + config.order.join("`, `") + "`";
+	}
+	if (config.limit) {
+		if (config.skip) {
+			_query += " LIMIT " + config.skip + ", " + config.limit;
+		} else {
+			_query += " LIMIT " + config.limit;
+		}
+	}
+
+	//console.log(_query);
+
+	this._client.query(_query, function (err, info) {
+		if (err) {
+			callback(err);
+			return;
+		}
+		
+		callback(null, info);
+	});
+};
 ORMClient.prototype.saveRecord = function (collection, data, callback) {
 	if (parseInt(data.id) > 0) {
 		var id = data.id;
@@ -109,6 +160,12 @@ ORMClient.prototype._insertRecord = function (collection, data, callback) {
 			case "number":
 				_values.push(data[k]);
 				break;
+			case "boolean":
+				_values.push(data[k] ? 1 : 0);
+				break;
+			case "undefined":
+				_fields.pop();
+				break;
 			default:
 				_values.push("'" + data[k].replace("'", "\\'") + "'");
 		}
@@ -116,14 +173,15 @@ ORMClient.prototype._insertRecord = function (collection, data, callback) {
 	
 	_query = _query.replace("%fields", _fields.join(", "));
 	_query = _query.replace("%values", _values.join(", "));
+	//console.log(_query);
 	
 	this._client.query(_query, function (err, info) {
 		if (err) {
-			callback(false);
+			callback(err);
 			return;
 		}
 		
-		callback(true, info.insertId);
+		callback(null, info.insertId);
 	});
 };
 ORMClient.prototype._updateRecord = function (collection, data, id, callback) {
@@ -137,20 +195,24 @@ ORMClient.prototype._updateRecord = function (collection, data, id, callback) {
 			case "number":
 				_values.push("`" + k + "`=" + data[k]);
 				break;
+			case "boolean":
+				_values.push("`" + k + "`=" + (data[k] ? 1 : 0));
+				break;
 			default:
 				_values.push("`" + k + "`='" + data[k].replace("'", "\\'") + "'");
 		}
 	}
 	
 	_query = _query.replace("%values", _values.join(", "));
+	//console.log(_query);
 	
 	this._client.query(_query, function (err, info) {
 		if (err) {
-			callback(false);
+			callback(err);
 			return;
 		}
 		
-		callback(true);
+		callback(null);
 	});
 };
 
