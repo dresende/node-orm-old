@@ -165,18 +165,54 @@ ORM.prototype.define = function (model, fields, colParams) {
 		orm._db.createCollection(model, fields, associations);
 	};
 	Model.get = function (id, callback) {
-		orm._db.selectRecords(model, { "conditions": { "id": id } }, function (err, data) {
-			if (err) {
-				return callback();
+		orm._db.selectRecords(model, {
+			"conditions": { "id": id },
+			"callback"	: function (err, data) {
+				if (err || data.length == 0) return callback();
+
+				callback(new Model(data[0]));
 			}
-			if (data.length == 0) {
-				return callback();
-			}
-			callback(new Model(data[0]));
 		});
 	};
 	Model.find = function () {
-		console.log("find()");
+		var args = arguments, callback = null, config = {}, last_arg = arguments.length - 1;
+		
+		if (last_arg >= 0) {
+			callback = arguments[last_arg];
+			last_arg--;
+		}
+
+		//.find(callback);
+		//.find(conditions, callback);
+		//.find(conditions, limit, callback);
+		//.find(conditions, order, callback);
+		//.find(conditions, order, limit, callback);
+		
+		for (var i = 0; i <= last_arg; i++) {
+			switch (typeof arguments[i]) {
+				case "object": // conditions
+					config.conditions = arguments[i];
+					break;
+				case "number": // limit
+					config.limit = arguments[i];
+					break;
+				case "string": // order
+					config.order = arguments[i];
+					break;
+			}
+		}
+
+		if (callback !== null) {
+			config.callback = function (err, data) {
+				if (err || data.length == 0) return callback();
+
+				for (var i = 0; i < data.length; i++) {
+					data[i] = new Model(data[i]);
+				}
+				callback(data);
+			};
+		}
+		orm._db.selectRecords(model, config);
 	};
 
 	return Model;
