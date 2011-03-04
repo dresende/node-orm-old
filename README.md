@@ -54,3 +54,55 @@ Node-ORM is a NodeJS module for multiple databases using Object-Relational Mappi
     	}
     });
 
+## Supported Types
+
+This values are still just supported for .sync() (table creations), not for other instance operations live .save() (yet).
+
+<table>
+	<tr>
+		<td>Name</td>
+		<td>Description</td>
+		<td>MySQL Type</td>
+	</tr>
+	<tr>
+		<td>string</td>
+		<td>Small text</td>
+		<td>VARCHAR(255)</td>
+	</tr>
+	<tr>
+		<td>text</td>
+		<td>Big text</td>
+		<td>TEXT</td>
+	</tr>
+	<tr>
+		<td>int, integer, num, number</td>
+		<td>Signed integer</td>
+		<td>INT</td>
+	</tr>
+	<tr>
+		<td>float</td>
+		<td>Floating point number</td>
+		<td>FLOAT</td>
+	</tr>
+	<tr>
+		<td>bool, boolean</td>
+		<td>True or false value</td>
+		<td>TINYINT(1) (true=1, false=0)</td>
+	</tr>
+	<tr>
+		<td>data</td>
+		<td>Binary data</td>
+		<td>BLOB</td>
+	</tr>
+	<tr>
+		<td>enum</td>
+		<td>Enumerated value</td>
+		<td>ENUM</td>
+	</tr>
+	<tr>
+		<td>struct</td>
+		<td>Generic (and simple) object</td>
+		<td>TEXT (saved as JSON)</td>
+	</tr>
+</table>
+1. string - Small text
