@@ -60,9 +60,9 @@ This values are still just supported for .sync() (table creations), not for othe
 
 <table>
 	<tr>
-		<td>Name</td>
-		<td>Description</td>
-		<td>MySQL Type</td>
+		<th>Name</th>
+		<th>Description</th>
+		<th>MySQL Type</th>
 	</tr>
 	<tr>
 		<td>string</td>
