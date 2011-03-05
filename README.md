@@ -5,6 +5,12 @@ NodeJS ORM
 
 Node-ORM is a NodeJS module for multiple databases using Object-Relational Mapping.
 
+## Installing
+
+Install using NPM:
+
+    npm install orm
+
 ## Connecting to a Database (MySQL in the example)
 
     var orm = require("orm");
