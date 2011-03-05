@@ -1,0 +1,35 @@
+{
+	"name"			: "orm",
+	"version"		: "0.1.0",
+	"description"	: "NodeJS Object-relational mapping",
+	"keywords"		: [
+		"orm",
+		"mysql",
+		"database",
+		"relational"
+	],
+	"author"		: {
+		"name"	: "Diogo Resende",
+		"email"	: "dresende@thinkdigital.pt",
+		"url"	: "http://www.thinkdigital.pt"
+	},
+	"engines"		: {
+		"node"	: ">= 0.4.0"
+	},
+	"dependencies"	: {
+		"mysql"	: ">= 0.9.1"
+	},
+	"repository"	: {
+		"type"	: "git",
+		"url"	: "http://github.com/dresende/node-orm.git"
+	},
+	"directories"	: {
+		"lib"		: "./lib",
+		"example"	: "./examples",
+	},
+	"main"			: "./lib/orm",
+	"licenses"		: [{
+		"type"	: "MIT",
+		"url"	: "http://github.com/dresende/node-orm/raw/master/LICENSE"
+	}]
+}

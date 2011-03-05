@@ -1,4 +1,4 @@
-var orm = require("./orm");
+var orm = require(__dirname + "/../lib/orm");
 
 orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 	var Person = db.define("person", {
@@ -21,6 +21,11 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 	Person.hasMany("friends", Person, "friend");
 	// create table(s) on database
 	Person.sync();
+	
+	Person.find({ "name": "John" }, function (items) {
+		console.dir(items);
+	});
+	return;
 
 	// new records
 	var John = new Person({
