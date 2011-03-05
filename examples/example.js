@@ -23,7 +23,19 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 	Person.sync();
 	
 	Person.find({ "name": "John" }, function (items) {
-		console.dir(items);
+		var John = items[0];
+		
+		Person.find({ "name": "Jane" }, function (items) {
+			var Jane = items[0];
+			
+			Person.find({ "name": "Jeremy" }, function (items) {
+				var Jeremy = items[0];
+				
+				John.setFriends(Jane, Jeremy, function (err) {
+					console.log(Jane.name + " and " + Jeremy.name + " are now friends of " + John.fullName());
+				});
+			});
+		});
 	});
 	return;
 
