@@ -31,8 +31,16 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 			Person.find({ "name": "Jeremy" }, function (items) {
 				var Jeremy = items[0];
 				
-				John.setFriends(Jane, Jeremy, function (err) {
+				John.addFriends(Jane, Jeremy, function (err) {
 					console.log(Jane.name + " and " + Jeremy.name + " are now friends of " + John.fullName());
+					
+					John.removeFriends(Jane, function (err) {
+						console.log(Jane.name + " is no longer a friend of " + John.fullName());
+						
+						John.removeFriends(function (err) {
+							console.log(John.fullName() + " has no friends now");
+						});
+					});
 				});
 			});
 		});
