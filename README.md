@@ -37,6 +37,14 @@ Install using NPM:
         }
     });
 
+## Adding associations
+
+    Person.hasOne("father", Person);
+    // or just
+    Person.hasOne("mother"); // defaults to same model
+    
+    Person.hasMany("friends", Person, "friend"); // will create a table "person_friends" with 2 fields (person_id and friend_id)
+
 ## Creating the model on the database
 
     Person.sync();
@@ -58,6 +66,34 @@ Install using NPM:
     	} else {
     		console.log("Something went wrong...");
     	}
+    });
+
+## Changing associations
+
+I think an example is better to explain.
+
+    John.setFather(Jeremy, function () {
+    	John.setMother(Jane, function () {
+    		John.addFriends(Jeremy, Jane, function () {
+    			console.log("Jeremy and Jane (John's parents) are now his friends too");
+    		});
+    	});
+    });
+    
+If you want there's also this methods:
+
+    John.getFather(function (JohnFather) {
+    	console.log("John's father is " + JohnFather.name);
+    });
+    John.unsetMother(function () {
+    	console.log("John has no mother now!");
+    });
+    John.removeFriends(Jeremy, Jane, function () {
+    	console.log("John has no friends now!");
+    });
+    // or just don't send any, all will be removed
+    John.removeFriends(function () {
+    	console.log("John has no friends now!");
     });
 
 ## Supported Types
