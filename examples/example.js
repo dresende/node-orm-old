@@ -1,6 +1,7 @@
 var orm = require(__dirname + "/../lib/orm");
 
 orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
+	// define a Person
 	var Person = db.define("person", {
 		"created"	: { "type": "date" },
 		"name"		: { "type": "string" },
@@ -10,22 +11,32 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 		"meta"		: { "type": "struct" }
 	}, {
 		"methods"	: {
+			// this is a method that can be called in any
+			// instance
 			"fullName" :function () {
 				return this.name + " " + this.surname;
 			}
 		}
 	});
+	// define a Pet
 	var Pet = db.define("pet", {
 		"name"		: { "type": "string" },
 		"type"		: { "type": "enum", "values": [ "dog", "cat", "fish" ] }
 	});
-	Person.hasMany("pets", Pet, "pet");
 	
+	// a Person has many "pets" (from model "Pet") where each one is called a "pet"
+	Person.hasMany("pets", Pet, "pet");
+	// another example: a Group has many "people" (from model "Person") where each one is called a "member"
+	
+	// sync to database
 	Person.sync();
 	Pet.sync();
 	
+	// create the Person John (if it does not exist)
 	createJohn(function (John) {
+		// create the Pet Deco (if it does not exist)
 		createDeco(function (Deco) {
+			// add Deco has a pet from John
 			John.addPets(Deco, function () {
 				console.log(Deco.name + " is now " + John.fullName() + "'s dog");
 			});
