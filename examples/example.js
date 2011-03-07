@@ -34,6 +34,12 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 				John.addFriends(Jane, Jeremy, function (err) {
 					console.log(Jane.name + " and " + Jeremy.name + " are now friends of " + John.fullName());
 					
+					John.getFriends(function (err, data) {
+						console.dir(err);
+						console.dir(data);
+					});
+					
+					/*
 					John.removeFriends(Jane, function (err) {
 						console.log(Jane.name + " is no longer a friend of " + John.fullName());
 						
@@ -41,6 +47,7 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 							console.log(John.fullName() + " has no friends now");
 						});
 					});
+					*/
 				});
 			});
 		});
