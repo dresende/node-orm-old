@@ -1,6 +1,6 @@
 {
 	"name"			: "orm",
-	"version"		: "0.1.1",
+	"version"		: "0.1.2",
 	"description"	: "NodeJS Object-relational mapping",
 	"keywords"		: [
 		"orm",
@@ -25,7 +25,7 @@
 	},
 	"directories"	: {
 		"lib"		: "./lib",
-		"example"	: "./examples",
+		"example"	: "./examples"
 	},
 	"main"			: "./lib/orm",
 	"licenses"		: [{
