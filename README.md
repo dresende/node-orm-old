@@ -60,11 +60,12 @@ Install using NPM:
 
 ## Saving record to database
 
-    John.save(function (success) {
-    	if (success) {
-    		console.log("Saved! ID=" + John.id);
+    John.save(function (err, JohnCopy) {
+    	if (!err) {
+    		console.log("Saved! ID=" + John.id); // you can use John or JohnCopy
     	} else {
     		console.log("Something went wrong...");
+    		console.dir(err);
     	}
     });
 
