@@ -31,11 +31,14 @@ orm.connect("postgresql://postgres:postgres@localhost/amber", function (success,
 	});
 
 	setTimeout(function () {
-		console.log("Searching for 'friend' (max 2 results)..");
-		FTS.textsearch(2, "friend", function (people) {
+		console.log("Searching for 'friends or jeremy or (jane and not jones)' (max 2 results)..");
+		FTS.textsearch(2, "friends or jeremy or (jane and not jones)", function (people) {
+			if (people === null) {
+				return console.log("Error searching");
+			}
 			for (i = 0; i < people.length; i++) {
 				console.log("%s (%d) = '%s'", people[i].name, people[i].id, people[i].body);
 			}
 		});
-	}, 2000);
+	}, 1500);
 });
