@@ -106,50 +106,60 @@ This values are still just supported for .sync() (table creations), not for othe
 		<th>Name</th>
 		<th>Description</th>
 		<th>MySQL Type</th>
+		<th>PostgreSQL Type</th>
 	</tr>
 	<tr>
 		<td>string</td>
 		<td>Small text</td>
+		<td>VARCHAR(255)</td>
 		<td>VARCHAR(255)</td>
 	</tr>
 	<tr>
 		<td>text</td>
 		<td>Big text</td>
 		<td>TEXT</td>
+		<td>TEXT</td>
 	</tr>
 	<tr>
 		<td>int, integer, num, number</td>
 		<td>Signed integer</td>
 		<td>INT</td>
+		<td>INTEGER</td>
 	</tr>
 	<tr>
 		<td>float</td>
 		<td>Floating point number</td>
 		<td>FLOAT</td>
+		<td>REAL</td>
 	</tr>
 	<tr>
 		<td>bool, boolean</td>
 		<td>True or false value</td>
 		<td>TINYINT(1) (true=1, false=0)</td>
+		<td>BOOLEAN</td>
 	</tr>
 	<tr>
 		<td>date</td>
 		<td>Date/time value (seconds precision)</td>
 		<td>DATETIME</td>
+		<td>TIMESTAMP</td>
 	</tr>
 	<tr>
 		<td>data</td>
 		<td>Binary data</td>
 		<td>BLOB</td>
+		<td>BYTEA</td>
 	</tr>
 	<tr>
 		<td>enum</td>
 		<td>Enumerated value</td>
 		<td>ENUM</td>
+		<td>ENUM</td>
 	</tr>
 	<tr>
 		<td>struct</td>
 		<td>Generic (and simple) object</td>
+		<td>TEXT (saved as JSON)</td>
 		<td>TEXT (saved as JSON)</td>
 	</tr>
 </table>
