@@ -13,6 +13,8 @@ Install using NPM:
 
 ## Connecting to a Database (MySQL in the example)
 
+You can check the [API](https://github.com/dresende/node-orm/wiki/API) for a more detailed overview.
+
     var orm = require("orm");
     var db = orm.connect("mysql://username:password@hostname/database", function (success, db) {
         if (!success) {
