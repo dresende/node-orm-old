@@ -1,6 +1,6 @@
 {
 	"name"			: "orm",
-	"version"		: "0.1.4",
+	"version"		: "0.1.5",
 	"description"	: "NodeJS Object-relational mapping",
 	"keywords"		: [
 		"orm",
@@ -8,11 +8,10 @@
 		"database",
 		"relational"
 	],
-	"author"		: {
-		"name"	: "Diogo Resende",
-		"email"	: "dresende@thinkdigital.pt",
-		"url"	: "http://www.thinkdigital.pt"
-	},
+	"author"	: "Diogo Resende <dresende@thinkdigital.pt>",
+	"contributors": [
+		{ "name": "Michael Axiak", "email": "mike@axiak.net" }
+	],
 	"engines"		: {
 		"node"	: ">= 0.4.0"
 	},
