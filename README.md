@@ -25,6 +25,23 @@ You can check the [API](https://github.com/dresende/node-orm/wiki/API) for a mor
         // you can now use db variable to define models
     });
 
+## Connecting via raw database API
+
+    var orm = require("orm");
+    var mysql = require("mysql");
+		var client = mysql.createClient({
+        user: 'root',
+        password: 'root'
+    });
+    var db = orm.connect("mysql", client, function (success, db) {
+        // same as above...
+    });
+
+This allows you to generate your own database objects that conform to the following postgres and mysql libraries:
+
+ * Mysql: https://github.com/felixge/node-mysql
+ * Postgres: https://github.com/brianc/node-postgres
+
 ## Defining a model
 
     var Person = db.define("person", {
