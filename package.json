@@ -10,7 +10,9 @@
 	],
 	"author"	: "Diogo Resende <dresende@thinkdigital.pt>",
 	"contributors": [
-		{ "name": "Michael Axiak", "email": "mike@axiak.net" }
+		{ "name": "Michael Axiak", "email": "mike@axiak.net" },
+		{ "name": "booo" },
+		{ "name": "shaneiseminger" }
 	],
 	"engines"		: {
 		"node"	: ">= 0.4.0"
