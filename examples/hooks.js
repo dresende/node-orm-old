@@ -19,8 +19,14 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 			}
 		},
 		"hooks": {
-			beforeSave: function (data) {
-				data.updated = new Date();
+			beforeSave: function (person) {
+				person.updated = new Date();
+			},
+			afterSave: function (success, person) {
+				if (!success) {
+					return console.log("%s not saved :(", person.fullName());
+				}
+				console.log("%s saved :)", person.fullName());
 			}
 		}
 	});
