@@ -3,7 +3,8 @@ NodeJS ORM
 
 ## About
 
-Node-ORM is a NodeJS module for multiple databases using Object-Relational Mapping.
+Node-ORM is a NodeJS module for multiple databases using Object-Relational Mapping with
+some cool features like validators and hooks.
 
 ## Installing
 
