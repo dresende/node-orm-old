@@ -18,7 +18,7 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 			}
 		},
 		"validations": {
-			"age": orm.validators.rangeNumber(18, 150)
+			"age": orm.validators.rangeNumber(18)
 		}
 	});
 	Person.find({ name: "Jane" }, function (Janes) {
