@@ -30,7 +30,7 @@ You can check the [API](https://github.com/dresende/node-orm/wiki) for a more de
 
     var orm = require("orm");
     var mysql = require("mysql");
-		var client = mysql.createClient({
+    var client = mysql.createClient({
         user: 'root',
         password: 'root'
     });
