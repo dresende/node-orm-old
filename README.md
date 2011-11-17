@@ -4,7 +4,10 @@ NodeJS ORM
 ## About
 
 Node-ORM is a NodeJS module for multiple databases using Object-Relational Mapping with
-some cool features like validators and hooks.
+some cool features like validators and hooks. New features are added by suggestion issues
+or when I remember I need something. I make a strong effort not to change the API, but
+sometimes it can happen. If you don't want to get into trouble I suggest you to define
+your package.json (in project) to use a specific version of ORM (and not >= x.y.z).
 
 ## Installing
 
