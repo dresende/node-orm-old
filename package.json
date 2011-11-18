@@ -1,33 +1,33 @@
 {
-	"name"			: "orm",
-	"version"		: "0.1.6",
-	"description"	: "NodeJS Object-relational mapping",
-	"keywords"		: [
+	"name"        : "orm",
+	"version"     : "0.1.7",
+	"description" : "NodeJS Object-relational mapping",
+	"keywords"    : [
 		"orm",
 		"mysql",
 		"database",
 		"relational"
 	],
-	"author"	: "Diogo Resende <dresende@thinkdigital.pt>",
+	"author"      : "Diogo Resende <dresende@thinkdigital.pt>",
 	"contributors": [
 		{ "name": "Michael Axiak", "email": "mike@axiak.net" },
 		{ "name": "booo" },
 		{ "name": "shaneiseminger" }
 	],
-	"engines"		: {
-		"node"	: ">= 0.4.0"
+	"engines"    : {
+		"node"   : ">= 0.4.0"
 	},
-	"repository"	: {
-		"type"	: "git",
-		"url"	: "http://github.com/dresende/node-orm.git"
+	"repository" : {
+		"type"   : "git",
+		"url"    : "http://github.com/dresende/node-orm.git"
 	},
-	"directories"	: {
-		"lib"		: "./lib",
-		"example"	: "./examples"
+	"directories": {
+		"lib"    : "./lib",
+		"example": "./examples"
 	},
-	"main"			: "./lib/orm",
-	"licenses"		: [{
-		"type"	: "MIT",
-		"url"	: "http://github.com/dresende/node-orm/raw/master/LICENSE"
+	"main"       : "./lib/orm",
+	"licenses"   : [{
+		"type"   : "MIT",
+		"url"    : "http://github.com/dresende/node-orm/raw/master/LICENSE"
 	}]
 }
