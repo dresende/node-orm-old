@@ -197,7 +197,7 @@ This values are still just supported for .sync() (table creations), not for othe
         <td>String</td>
 	</tr>
 	<tr>
-		<td>struct</td>
+		<td>struct, object</td>
 		<td>Generic (and simple) object</td>
 		<td>TEXT (saved as JSON)</td>
         <td>TEXT (saved as JSON)</td>
