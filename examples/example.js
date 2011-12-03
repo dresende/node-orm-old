@@ -3,12 +3,12 @@ var orm = require(__dirname + "/../lib/orm");
 orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 	// define a Person
 	var Person = db.define("person", {
-		"created"	: { "type": "date" },
-		"name"		: { "type": "string" },
-		"surname"	: { "type": "string", "def": "" },
-		"age"		: { "type": "int" },
-		"male"		: { "type": "bool", "def": true },
-		"meta"		: { "type": "struct" }
+		"created"	: Date,
+		"name"		: String,
+		"surname"	: String,
+		"age"		: Number,
+		"male"		: Boolean,
+		"meta"		: Object
 	}, {
 		"methods"	: {
 			// this is a method that can be called in any
@@ -34,6 +34,7 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 	
 	// create the Person John (if it does not exist)
 	createJohn(function (John) {
+		console.log(John);
 		// create the Pet Deco (if it does not exist)
 		createDeco(function (Deco) {
 			// add Deco has a pet from John
