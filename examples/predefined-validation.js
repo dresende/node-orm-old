@@ -18,7 +18,8 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 			}
 		},
 		"validations": {
-			"age": orm.validators.rangeNumber(18)
+			"age" : orm.validators.rangeNumber(18),
+			"name": orm.validators.unique()
 		}
 	});
 	Person.find({ name: "Jane" }, function (Janes) {
@@ -30,7 +31,8 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 
 		Jane.age = -15;
 		console.log("saving Jane as -15 year old..");
-		Jane.save(function (err, SavedJane) {
+		Jane.save({ "validateAll": true }, function (err, SavedJane) {
+			// you should have 2 errors here
 			console.log("error:", err);
 			
 			Jane.age = 19;
