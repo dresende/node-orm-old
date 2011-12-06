@@ -1,10 +1,12 @@
 {
 	"name"        : "orm",
-	"version"     : "0.1.7",
+	"version"     : "0.1.8",
 	"description" : "NodeJS Object-relational mapping",
 	"keywords"    : [
 		"orm",
 		"mysql",
+		"postgresql",
+		"mongodb",
 		"database",
 		"relational"
 	],
