@@ -3,7 +3,6 @@ var orm = require(__dirname + "/../lib/orm");
 orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 	// define a Person
 	var Person = db.define("person", {
-		"created"	: Date,
 		"name"		: String,
 		"surname"	: String,
 		"age"		: Number,
