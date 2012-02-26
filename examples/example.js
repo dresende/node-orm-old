@@ -37,9 +37,12 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 		console.log(John);
 		// create the Pet Deco (if it does not exist)
 		createDeco(function (Deco) {
-			// add Deco has a pet from John
-			John.addPets(Deco, function () {
-				console.log(Deco.name + " is now " + John.fullName() + "'s dog");
+			// create the Pet Hugo (if it does not exist)
+			createHugo(function (Hugo) {
+			// add Deco and Hugo has John's pets
+				John.addPets(Deco, Hugo, function () {
+					console.log(Deco.name + " and " + Hugo.name + " are now " + John.fullName() + "'s pets");
+				});
 			});
 		});
 	});
@@ -62,6 +65,19 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 			if (pets === null) {
 				var Deco = new Pet({ "name": "Deco", "type": "dog" });
 				Deco.save(function (err, dog) {
+					callback(dog);
+				});
+			} else {
+				callback(pets[0]);
+			}
+		});
+	}
+
+	function createHugo(callback) {
+		Pet.find({ "name": "Hugo" }, function (pets) {
+			if (pets === null) {
+				var Hugo = new Pet({ "name": "Hugo", "type": "dog" });
+				Hugo.save(function (err, dog) {
 					callback(dog);
 				});
 			} else {
