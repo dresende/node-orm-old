@@ -1,6 +1,6 @@
 {
 	"name"        : "orm",
-	"version"     : "0.1.8-4",
+	"version"     : "0.1.8-6",
 	"description" : "NodeJS Object-relational mapping",
 	"keywords"    : [
 		"orm",
@@ -15,7 +15,8 @@
 		{ "name": "Michael Axiak", "email": "mike@axiak.net" },
 		{ "name": "Michael Yagudaev", "email": "michael@yagudaev.com" },
 		{ "name": "booo" },
-		{ "name": "shaneiseminger" }
+		{ "name": "shaneiseminger" },
+		{ "name": "shine-on" }
 	],
 	"engines"    : {
 		"node"   : ">= 0.4.0"
