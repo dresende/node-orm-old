@@ -4,9 +4,9 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 	// define a Person
 	var Person = db.define("person", {
 		"created"	: { "type": "date" },
-		"name"		: { "type": "string" },
+		"name"		: { "type": "string", "validations": [ orm.validators.unique() ] },
 		"surname"	: { "type": "string", "def": "" },
-		"age"		: { "type": "int" },
+		"age"		: { "type": "int", "validations": orm.validators.rangeNumber(18) },
 		"male"		: { "type": "bool", "def": true },
 		"meta"		: { "type": "struct" }
 	}, {
@@ -16,10 +16,6 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 			"fullName" :function () {
 				return this.name + " " + this.surname;
 			}
-		},
-		"validations": {
-			"age" : orm.validators.rangeNumber(18),
-			"name": orm.validators.unique()
 		}
 	});
 	Person.find({ name: "Jane" }, function (Janes) {
