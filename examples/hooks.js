@@ -4,7 +4,7 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 	// define a Person
 	var Person = db.define("person", {
 		"created"	: { "type": "date" },
-		"updated"	: { "type": "date" },
+		"updated_at": { "type": "date" },
 		"name"		: { "type": "string" },
 		"surname"	: { "type": "string", "def": "" },
 		"age"		: { "type": "int" },
@@ -20,7 +20,7 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 		},
 		"hooks": {
 			beforeSave: function (person) {
-				person.updated = new Date();
+				person.updated_at = new Date();
 			},
 			afterSave: function (success, person) {
 				if (!success) {

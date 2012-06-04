@@ -21,6 +21,9 @@
 	"engines"    : {
 		"node"   : ">= 0.4.0"
 	},
+	"dependencies": {
+		"moment": "1.6.x"
+	},
 	"repository" : {
 		"type"   : "git",
 		"url"    : "http://github.com/dresende/node-orm.git"
