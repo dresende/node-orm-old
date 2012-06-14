@@ -71,6 +71,8 @@ This allows you to generate your own database objects that conform to the follow
 ## Creating the model on the database
 
     Person.sync();
+    
+Note: `sync()` only creates tables at the moment; table modifications will be added in an upcoming version.
 
 ## Creating and using a record
 
