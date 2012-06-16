@@ -2,54 +2,34 @@ var helpers = require("../lib/databases/helpers");
 var should = require("should");
 
 describe("helpers", function () {
-	describe(".buildSqlOrder(A)", function () {
-		it("should return ' ORDER BY A ASC'", function () {
-			helpers.buildSqlOrder("A").should.equal(" ORDER BY A ASC");
-		});
-	});
-	describe(".buildSqlOrder(A Asc)", function () {
-		it("should return ' ORDER BY A ASC'", function () {
-			helpers.buildSqlOrder("A Asc").should.equal(" ORDER BY A ASC");
-		});
-	});
-	describe(".buildSqlOrder(A Desc)", function () {
-		it("should return ' ORDER BY A DESC'", function () {
-			helpers.buildSqlOrder("A Desc").should.equal(" ORDER BY A DESC");
-		});
-	});
-	describe(".buildSqlOrder(A B Asc)", function () {
-		it("should return ' ORDER BY A ASC, B ASC'", function () {
-			helpers.buildSqlOrder("A B Asc").should.equal(" ORDER BY A ASC, B ASC");
-		});
-	});
-	describe(".buildSqlOrder(A Asc B Asc)", function () {
-		it("should return ' ORDER BY A ASC, B ASC'", function () {
-			helpers.buildSqlOrder("A Asc B Asc").should.equal(" ORDER BY A ASC, B ASC");
-		});
-	});
-	describe(".buildSqlOrder(A Desc B Asc)", function () {
-		it("should return ' ORDER BY A DESC, B ASC'", function () {
-			helpers.buildSqlOrder("A Desc B Asc").should.equal(" ORDER BY A DESC, B ASC");
-		});
-	});
-	describe(".buildSqlOrder( A  B   C  )", function () {
-		it("should return ' ORDER BY A ASC, B ASC, C ASC'", function () {
-			helpers.buildSqlOrder(" A  B   C  ").should.equal(" ORDER BY A ASC, B ASC, C ASC");
-		});
-	});
-	describe(".buildSqlOrder(A)", function () {
-		it("should return ' ORDER BY A ASC'", function () {
-			helpers.buildSqlOrder("A").should.equal(" ORDER BY A ASC");
-		});
-	});
-	describe(".buildSqlLimit(N)", function () {
-		it("should return ' LIMIT N'", function () {
-			helpers.buildSqlLimit("N").should.equal(" LIMIT N");
-		});
-	});
-	describe(".buildSqlLimit(N, M)", function () {
-		it("should return ' LIMIT M,N'", function () {
-			helpers.buildSqlLimit("N", "M").should.equal(" LIMIT M, N");
-		});
-	});
+	var tests = {
+		buildSqlOrder: [
+			[ [ "A" ], " ORDER BY A ASC" ],
+			[ [ "A Asc" ], " ORDER BY A ASC" ],
+			[ [ "A Desc" ], " ORDER BY A DESC" ],
+			[ [ "A B Asc" ], " ORDER BY A ASC, B ASC" ],
+			[ [ "A Asc B Asc" ], " ORDER BY A ASC, B ASC" ],
+			[ [ "A Desc B" ], " ORDER BY A DESC, B ASC" ],
+			[ [ " A  B   C  " ], " ORDER BY A ASC, B ASC, C ASC" ],
+			[ [ "A" ], " ORDER BY A ASC" ]
+		],
+		buildSqlLimit: [
+			[ [ "N" ], " LIMIT N" ],
+			[ [ "N", "M" ], " LIMIT M, N" ]
+		]
+	};
+
+	for (var k in tests) {
+		for (var i = 0; i < tests[k].length; i++) {
+			addTest(k, tests[k][i][0], tests[k][i][1]);
+		}
+	}
 });
+
+function addTest(fun, params, expected) {
+	describe("." + fun + "(" + params.join(", ") + ")", function () {
+		it("should return '" + expected + "'", function () {
+			helpers[fun].apply(helpers, params).should.equal(expected);
+		});
+	});
+}
