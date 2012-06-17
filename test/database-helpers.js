@@ -16,6 +16,23 @@ describe("helpers", function () {
 		buildSqlLimit: [
 			[ [ "N" ], " LIMIT N" ],
 			[ [ "N", "M" ], " LIMIT M, N" ]
+		],
+		buildSqlWhere: [
+			[ [ {}, escapeCb ], [ " WHERE ", [] ] ],
+			[ [ { "prop1": 2 }, escapeCb ], [ " WHERE $prop1$=?", [ 2 ] ] ],
+			[ [ { "prop1": 'a' }, escapeCb ], [ " WHERE $prop1$=?", [ 'a' ] ] ],
+			[ [ { "prop1": 2, "prop2": '2' }, escapeCb ], [ " WHERE $prop1$=? AND $prop2$=?", [ 2, '2' ] ] ],
+			[ [ { "prop1": 2, "prop2": true }, escapeCb ], [ " WHERE $prop1$=? AND $prop2$=?", [ 2, 1 ] ] ],
+			[ [ { "prop1": 2, "prop2": false }, escapeCb ], [ " WHERE $prop1$=? AND $prop2$=?", [ 2, 0 ] ] ],
+			[ [ { "prop1 !": 2 }, escapeCb ], [ " WHERE $prop1$!=?", [ 2 ] ] ],
+			[ [ { "prop1 !=": 2 }, escapeCb ], [ " WHERE $prop1$!=?", [ 2 ] ] ],
+			[ [ { "prop1 >": 2 }, escapeCb ], [ " WHERE $prop1$>?", [ 2 ] ] ],
+			[ [ { "prop1 <": 2 }, escapeCb ], [ " WHERE $prop1$<?", [ 2 ] ] ],
+			[ [ { "prop1 >=": 2 }, escapeCb ], [ " WHERE $prop1$>=?", [ 2 ] ] ],
+			[ [ { "prop1 <=": 2 }, escapeCb ], [ " WHERE $prop1$<=?", [ 2 ] ] ],
+			[ [ { "prop1": [ ] }, escapeCb ], [ " WHERE $prop1$ IN (NULL)", [ ] ] ],
+			[ [ { "prop1": [ 1, 2 ] }, escapeCb ], [ " WHERE $prop1$ IN (?,?)", [ 1, 2 ] ] ],
+			[ [ { "prop1 !": [ 1, 2 ] }, escapeCb ], [ " WHERE $prop1$ NOT IN (?,?)", [ 1, 2 ] ] ]
 		]
 	};
 
@@ -27,9 +44,34 @@ describe("helpers", function () {
 });
 
 function addTest(fun, params, expected) {
-	describe("." + fun + "(" + params.join(", ") + ")", function () {
+	var p = [];
+	for (var i = 0; i < params.length; i++) {
+		switch (typeof params[i]) {
+			case "object":
+				if (Array.isArray(params[i])) {
+					p.push("[" + params[i].join(",") + "]");
+				} else {
+					p.push(params[i]);
+				}
+				break;
+			case "function":
+				p.push("[Function]");
+				break;
+			case "string":
+				p.push("'" + params[i] + "'");
+				break;
+			default:
+				p.push(params[i]);
+		}
+	}
+
+	describe("." + fun + "(" + p.join(", ") + ")", function () {
 		it("should return '" + expected + "'", function () {
-			helpers[fun].apply(helpers, params).should.equal(expected);
+			helpers[fun].apply(helpers, params).should.eql(expected);
 		});
 	});
+}
+
+function escapeCb(name) {
+	return '$' + name + '$';
 }
