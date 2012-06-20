@@ -1,6 +1,6 @@
 var orm = require(__dirname + "/../lib/orm");
 
-orm.connect("pg://postgres:postgres@localhost/amber", function (success, db) {
+orm.connect("pg://orm:orm@localhost/orm", function (success, db) {
 	if (!success) {
 		console.log("Error %d: %s", db.number, db.message);
 		return;
@@ -12,6 +12,12 @@ orm.connect("pg://postgres:postgres@localhost/amber", function (success, db) {
 	Person.sync();
 
 	Person.find({ name: [ "John Doe" ] }, function (people) {
-		console.log(people);
+		if (people !== null) {
+			return console.log(people);
+		}
+		var John = new Person({ "name": "John Doe", "created": new Date() });
+		John.save(function (err, person) {
+			console.log(person);
+		});
 	});
 });
