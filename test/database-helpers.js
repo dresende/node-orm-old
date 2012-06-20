@@ -1,5 +1,10 @@
 var helpers = require("../lib/databases/helpers");
 var should = require("should");
+var sqlWhereOpts = {
+	boolean_convert: function (val) {
+		return val ? 'pass' : 'fail';
+	}
+};
 
 describe("helpers", function () {
 	var tests = {
@@ -22,8 +27,8 @@ describe("helpers", function () {
 			[ [ { "prop1": 2 }, escapeCb ], [ " WHERE $prop1$=?", [ 2 ] ] ],
 			[ [ { "prop1": 'a' }, escapeCb ], [ " WHERE $prop1$=?", [ 'a' ] ] ],
 			[ [ { "prop1": 2, "prop2": '2' }, escapeCb ], [ " WHERE $prop1$=? AND $prop2$=?", [ 2, '2' ] ] ],
-			[ [ { "prop1": 2, "prop2": true }, escapeCb ], [ " WHERE $prop1$=? AND $prop2$=?", [ 2, 1 ] ] ],
-			[ [ { "prop1": 2, "prop2": false }, escapeCb ], [ " WHERE $prop1$=? AND $prop2$=?", [ 2, 0 ] ] ],
+			[ [ { "prop1": 2, "prop2": true }, escapeCb, sqlWhereOpts ], [ " WHERE $prop1$=? AND $prop2$=?", [ 2, 'pass' ] ] ],
+			[ [ { "prop1": 2, "prop2": false }, escapeCb, sqlWhereOpts ], [ " WHERE $prop1$=? AND $prop2$=?", [ 2, 'fail' ] ] ],
 			[ [ { "prop1 !": 2 }, escapeCb ], [ " WHERE $prop1$!=?", [ 2 ] ] ],
 			[ [ { "prop1 !=": 2 }, escapeCb ], [ " WHERE $prop1$!=?", [ 2 ] ] ],
 			[ [ { "prop1 >": 2 }, escapeCb ], [ " WHERE $prop1$>?", [ 2 ] ] ],
