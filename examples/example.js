@@ -1,6 +1,10 @@
 var orm = require(__dirname + "/../lib/orm");
 
 orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
+	if (!success) {
+		return console.log("Could not connect to database");
+	}
+
 	// define a Person
 	var Person = db.define("person", {
 		"name"		: String,
@@ -22,25 +26,39 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 		"name"		: { "type": "string" },
 		"type"		: { "type": "enum", "values": [ "dog", "cat", "fish" ] }
 	});
-	
+
 	// a Person has many "pets" (from model "Pet") where each one is called a "pet"
-	Person.hasMany("pets", Pet, "pet");
+	Person.hasMany("pets", Pet, "pet", {
+		link: "Owners",
+		properties: {
+			since: Date,
+			nickname: String
+		}
+	});
 	// another example: a Group has many "people" (from model "Person") where each one is called a "member"
-	
+
 	// sync to database
 	Person.sync();
 	Pet.sync();
-	
+
+	Person.plugin("debug");
+
 	// create the Person John (if it does not exist)
 	createJohn(function (John) {
-		console.log(John);
 		// create the Pet Deco (if it does not exist)
 		createDeco(function (Deco) {
 			// create the Pet Hugo (if it does not exist)
 			createHugo(function (Hugo) {
 			// add Deco and Hugo has John's pets
-				John.addPets(Deco, Hugo, function () {
+				John.addPets(Deco, Hugo, {
+					since: new Date(),
+					nickname: "doggy"
+				}, function () {
 					console.log(Deco.name + " and " + Hugo.name + " are now " + John.fullName() + "'s pets");
+
+					John.getPets(function (pets) {
+						console.log(pets);
+					});
 				});
 			});
 		});
@@ -77,6 +95,7 @@ orm.connect("mysql://orm:orm@localhost/orm", function (success, db) {
 			if (pets === null) {
 				var Hugo = new Pet({ "name": "Hugo", "type": "dog" });
 				Hugo.save(function (err, dog) {
+					console.log("Hugo", err, dog);
 					callback(dog);
 				});
 			} else {
