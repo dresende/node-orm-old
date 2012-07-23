@@ -1,6 +1,15 @@
 NodeJS ORM
 ==========
 
+## Warning
+
+If you're using the latest version (and always updating when possible), be very carefull,
+because I'm going to change a lot of things preparing for 0.2.0. Here's some of the planned
+changes:
+
+- Strictly use (I mean always) the callback "standard" cb(err, ..);
+- Force using at least node v0.6;
+
 ## About
 
 Node-ORM is a NodeJS module for multiple databases using Object-Relational Mapping with
@@ -25,7 +34,7 @@ You can check the [API](https://github.com/dresende/node-orm/wiki) for a more de
             console.log("Could not connect to database!");
             return;
         }
-        
+
         // you can now use db variable to define models
     });
 
@@ -65,13 +74,13 @@ This allows you to generate your own database objects that conform to the follow
     Person.hasOne("father", Person);
     // or just
     Person.hasOne("mother"); // defaults to same model
-    
+
     Person.hasMany("friends", Person, "friend"); // will create a table "person_friends" with 2 fields (person_id and friend_id)
 
 ## Creating the model on the database
 
     Person.sync();
-    
+
 Note: `sync()` only creates tables at the moment; table modifications will be added in an upcoming version.
 
 ## Creating and using a record
@@ -105,7 +114,7 @@ I think an example is better to explain.
     		});
     	});
     });
-    
+
 If you want there's also this methods:
 
     John.getFather(function (JohnFather) {
