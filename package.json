@@ -1,6 +1,6 @@
 {
 	"name"        : "orm",
-	"version"     : "0.1.8-11",
+	"version"     : "0.1.8-12",
 	"description" : "NodeJS Object-relational mapping",
 	"keywords"    : [
 		"orm",
