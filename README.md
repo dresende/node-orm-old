@@ -3,12 +3,7 @@ NodeJS ORM
 
 ## Warning
 
-If you're using the latest version (and always updating when possible), be very carefull,
-because I'm going to change a lot of things preparing for 0.2.0. Here's some of the planned
-changes:
-
-- Strictly use (I mean always) the callback "standard" cb(err, ..);
-- Force using at least node v0.6;
+**Start looking at https://github.com/dresende/node-orm2 and please test it**
 
 ## About
 
