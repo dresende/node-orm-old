@@ -3,7 +3,15 @@ NodeJS ORM
 
 ## Warning
 
-**Start looking at https://github.com/dresende/node-orm2 and please test it**
+****
+
+****
+
+**This project has moved to https://github.com/dresende/node-orm2**
+
+****
+
+****
 
 ## About
 
