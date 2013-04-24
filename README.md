@@ -1,14 +1,1 @@
-NodeJS ORM
-==========
-
-## Warning
-
-****
-
-****
-
-**This project was moved to https://github.com/dresende/node-orm2**
-
-****
-
-****
+## This project was moved to https://github.com/dresende/node-orm2
